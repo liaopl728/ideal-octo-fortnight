@@ -3,231 +3,689 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>今日运势小站</title>
+  <title>研究生赛博算命中心</title>
   <style>
+    :root {
+      --bg-1: #0c1022;
+      --bg-2: #171a36;
+      --bg-3: #2b1f4f;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-strong: rgba(255, 255, 255, 0.12);
+      --border: rgba(255, 255, 255, 0.13);
+      --text: #f7f2ff;
+      --muted: #cdbfe9;
+      --gold: #ffd98f;
+      --gold-2: #ffb86c;
+      --danger: #ff9696;
+      --success: #9ef0bb;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+    }
+
     * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
     body {
       margin: 0;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-      background: linear-gradient(135deg, #0f1021, #1f1b3a 45%, #3a245c);
-      color: #f6f0ff;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 217, 143, 0.08), transparent 26%),
+        radial-gradient(circle at top right, rgba(124, 103, 255, 0.14), transparent 30%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 45%, var(--bg-3));
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
     }
-    .container {
+
+    .stars,
+    .stars::before,
+    .stars::after {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      content: "";
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 50px 160px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 180px 120px, rgba(255,255,255,0.7), transparent);
+      background-repeat: repeat;
+      background-size: 220px 220px;
+      opacity: 0.18;
+      z-index: 0;
+    }
+
+    .stars::before { transform: scale(1.15); opacity: 0.12; }
+    .stars::after { transform: scale(1.35); opacity: 0.08; }
+
+    .page {
+      position: relative;
+      z-index: 1;
       width: 100%;
-      max-width: 920px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      backdrop-filter: blur(14px);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 28px 18px 40px;
     }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+      border-radius: 28px;
+      padding: 34px 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      right: -70px;
+      top: -90px;
+      background: radial-gradient(circle, rgba(255, 217, 143, 0.24), transparent 60%);
+      filter: blur(8px);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 217, 143, 0.12);
+      border: 1px solid rgba(255, 217, 143, 0.22);
+      color: var(--gold);
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
     h1 {
       margin: 0 0 10px;
-      font-size: 34px;
-      text-align: center;
-      letter-spacing: 2px;
+      font-size: 42px;
+      line-height: 1.15;
+      letter-spacing: 1px;
     }
-    .sub {
-      margin: 0 0 28px;
-      text-align: center;
-      color: #ddd1ff;
-      line-height: 1.7;
+
+    .hero p {
+      margin: 0;
+      max-width: 780px;
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 16px;
     }
-    .grid {
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+      font-size: 15px;
+      font-family: inherit;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.97;
+    }
+
+    .btn-primary {
+      padding: 13px 22px;
+      color: #251400;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--gold-2));
+      box-shadow: 0 10px 24px rgba(255, 184, 108, 0.25);
+    }
+
+    .btn-secondary {
+      padding: 13px 22px;
+      color: var(--text);
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .layout {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 18px;
-      margin-bottom: 20px;
+      grid-template-columns: 380px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
     }
-    .card {
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 18px;
-      padding: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .panel {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow);
     }
-    label {
-      display: block;
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-title h2,
+    .section-title h3 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .section-title small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
       font-size: 14px;
-      margin-bottom: 8px;
-      color: #e6dbff;
+      color: #e9deff;
     }
-    input, select {
+
+    .field input,
+    .field select {
       width: 100%;
+      color: var(--text);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
       padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      background: rgba(255, 255, 255, 0.08);
-      color: white;
       outline: none;
       font-size: 15px;
     }
-    option { color: #111; }
-    .actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 24px 0;
-    }
-    button {
-      border: none;
-      padding: 13px 22px;
-      border-radius: 999px;
-      font-size: 15px;
-      cursor: pointer;
-      transition: transform 0.18s ease, opacity 0.18s ease;
-    }
-    button:hover {
-      transform: translateY(-1px);
-      opacity: 0.95;
-    }
-    .primary {
-      background: linear-gradient(135deg, #ffcf70, #ff9d5c);
-      color: #2d1d00;
-      font-weight: 700;
-    }
-    .secondary {
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-    }
-    .result {
-      margin-top: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
-      border-radius: 20px;
-      padding: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      min-height: 240px;
-    }
-    .badge {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(255, 207, 112, 0.18);
-      color: #ffd98f;
+
+    .field input::placeholder { color: #bdaedb; }
+    .field select option { color: #1e1430; }
+
+    .hint {
+      margin-top: 10px;
+      padding: 14px;
+      background: rgba(255, 217, 143, 0.08);
+      border: 1px dashed rgba(255, 217, 143, 0.20);
+      border-radius: 16px;
+      color: #eedeb1;
       font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .result-wrap {
+      display: grid;
+      gap: 18px;
+    }
+
+    .empty-state {
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 16px;
+      padding: 30px;
+      border: 1px dashed rgba(255,255,255,0.16);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .overview {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+    }
+
+    .overview-card {
+      border-radius: 22px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--gold);
+      background: rgba(255, 217, 143, 0.12);
+      border: 1px solid rgba(255, 217, 143, 0.18);
       margin-bottom: 14px;
     }
+
     .score {
-      font-size: 42px;
-      font-weight: 800;
-      margin: 6px 0 14px;
-      color: #ffe6a8;
+      font-size: 56px;
+      line-height: 1;
+      font-weight: 900;
+      color: #ffe7af;
+      margin: 4px 0 12px;
+      letter-spacing: 1px;
     }
-    .section-title {
+
+    .overview-card p,
+    .overview-card li,
+    .module p,
+    .module li,
+    .final-quote,
+    .footer-note {
+      line-height: 1.85;
+      color: #f4ecff;
+    }
+
+    .mini-stats {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-stat {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 24px;
+      color: var(--gold);
+      margin-top: 4px;
+    }
+
+    .modules-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .module {
+      border-radius: 22px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.05));
+    }
+
+    .module h3 {
+      margin: 0 0 10px;
+      font-size: 19px;
+      color: #fff2ca;
+    }
+
+    .module ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .fun-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .bar-group {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 14px;
+      color: #efe7ff;
+      margin-bottom: 6px;
+    }
+
+    .bar-track {
+      height: 10px;
+      width: 100%;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ffdd95, #ff8f8f);
+    }
+
+    .yi-ji {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .yi-ji-box {
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .yi-ji-box h4 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .yi-ji-box.yi h4 { color: var(--success); }
+    .yi-ji-box.ji h4 { color: #ffb1b1; }
+
+    .yi-ji-box ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.8;
+      color: #efe8ff;
+    }
+
+    .final-quote {
+      padding: 24px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 217, 143, 0.18);
+      background: linear-gradient(180deg, rgba(255,217,143,0.10), rgba(255,255,255,0.04));
       font-size: 18px;
-      margin: 18px 0 8px;
-      color: #fff0c3;
     }
-    .tips {
+
+    .share-box {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .share-text {
+      color: #efe6ff;
       line-height: 1.8;
-      color: #f1e8ff;
     }
-    .disclaimer {
-      margin-top: 18px;
-      color: #cfc3e7;
-      font-size: 13px;
-      line-height: 1.7;
+
+    .footer-note {
       text-align: center;
+      color: var(--muted);
+      margin-top: 18px;
+      font-size: 13px;
     }
-    .empty {
-      color: #cfc3e7;
-      line-height: 1.8;
+
+    .hidden { display: none; }
+
+    @media (max-width: 1060px) {
+      .layout,
+      .overview,
+      .modules-grid,
+      .fun-grid {
+        grid-template-columns: 1fr;
+      }
     }
-    @media (max-width: 600px) {
-      h1 { font-size: 28px; }
-      .container { padding: 18px; }
-      .score { font-size: 34px; }
+
+    @media (max-width: 640px) {
+      .page { padding: 18px 12px 28px; }
+      .hero, .panel { padding: 18px; }
+      h1 { font-size: 32px; }
+      .score { font-size: 44px; }
+      .yi-ji { grid-template-columns: 1fr; }
+      .hero-actions, .form-actions { flex-direction: column; }
+      .btn-primary, .btn-secondary { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>今日运势小站</h1>
-    <p class="sub">输入你的名字和出生信息，生成一个娱乐向的今日运势页面。<br>适合拿来做练手网页、课程作业、个人小项目。</p>
+  <div class="stars"></div>
 
-    <div class="grid">
-      <div class="card">
-        <label for="name">姓名</label>
-        <input id="name" type="text" placeholder="例如：张三" />
+  <div class="page">
+    <section class="hero">
+      <div class="hero-badge">🔮 仅供研究生娱乐使用 · 不保证发 paper，但保证懂你</div>
+      <h1>研究生赛博算命中心</h1>
+      <p>
+        测一测你今天的实验运、论文运、导师运和毕业运。
+        本系统深度学习了研究生日常：实验没结果、导师突然找、图改了三版、论文还在 related work、
+        以及“明明很努力却总觉得自己要完”的复杂心境。
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="generateFortune()">开始起卦</button>
+        <button class="btn-secondary" onclick="fillRandomProfile()">随机一位同门</button>
+        <button class="btn-secondary" onclick="scrollToForm()">先看今日命盘</button>
       </div>
-      <div class="card">
-        <label for="birthday">出生日期</label>
-        <input id="birthday" type="date" />
-      </div>
-      <div class="card">
-        <label for="category">占卜类型</label>
-        <select id="category">
-          <option value="general">综合运势</option>
-          <option value="love">感情运势</option>
-          <option value="career">学业 / 事业</option>
-          <option value="wealth">财运</option>
-        </select>
-      </div>
-    </div>
+    </section>
 
-    <div class="actions">
-      <button class="primary" onclick="generateFortune()">开始算一卦</button>
-      <button class="secondary" onclick="randomFill()">随机示例</button>
-      <button class="secondary" onclick="resetForm()">清空内容</button>
-    </div>
+    <div class="layout">
+      <aside class="panel" id="formPanel">
+        <div class="section-title">
+          <h2>输入研究生命格</h2>
+          <small>越真实，越像你导师会说的话</small>
+        </div>
 
-    <div class="result" id="resultBox">
-      <div class="empty">
-        结果会显示在这里。<br>
-        这个网页目前是前端纯静态版本，不需要服务器，保存为 <b>.html</b> 文件后双击即可打开。
-      </div>
-    </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="name">你的称呼</label>
+            <input id="name" type="text" placeholder="例如：王同学 / 裂开但还活着的我" />
+          </div>
 
-    <div class="disclaimer">
-      说明：本页面仅供娱乐与网页练习使用，不构成现实决策建议。
+          <div class="field">
+            <label for="grade">年级</label>
+            <select id="grade">
+              <option value="研一">研一</option>
+              <option value="研二">研二</option>
+              <option value="研三">研三</option>
+              <option value="延毕观察组">延毕观察组</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="discipline">学科类型</label>
+            <select id="discipline">
+              <option value="理工科">理工科</option>
+              <option value="文社科">文社科</option>
+              <option value="医学">医学</option>
+              <option value="艺术学">艺术学</option>
+              <option value="导师也说不清">导师也说不清</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="status">当前状态</label>
+            <select id="status">
+              <option value="在做实验">在做实验</option>
+              <option value="在写论文">在写论文</option>
+              <option value="在改论文">在改论文</option>
+              <option value="在等审稿">在等审稿</option>
+              <option value="在被导师催">在被导师催</option>
+              <option value="在假装不焦虑">在假装不焦虑</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="concern">今日核心困扰</label>
+            <select id="concern">
+              <option value="实验什么时候出结果">实验什么时候出结果</option>
+              <option value="什么时候能发论文">什么时候能发论文</option>
+              <option value="导师今天会不会找我">导师今天会不会找我</option>
+              <option value="这周能不能推进进度">这周能不能推进进度</option>
+              <option value="能不能顺利毕业">能不能顺利毕业</option>
+              <option value="我到底能不能睡个好觉">我到底能不能睡个好觉</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="messageCheck">你今天看导师消息了吗</label>
+            <select id="messageCheck">
+              <option value="看了">看了</option>
+              <option value="没看">没看</option>
+              <option value="不敢看">不敢看</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="experimentState">最近一次实验结果</label>
+            <select id="experimentState">
+              <option value="大成功">大成功</option>
+              <option value="有点意思">有点意思</option>
+              <option value="全是噪声">全是噪声</option>
+              <option value="仪器又坏了">仪器又坏了</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="paperState">当前论文状态</label>
+            <select id="paperState">
+              <option value="没开始">没开始</option>
+              <option value="在写">在写</option>
+              <option value="在改">在改</option>
+              <option value="第N次返修">第N次返修</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="mentalState">你的精神状态</label>
+            <select id="mentalState">
+              <option value="稳如老狗">稳如老狗</option>
+              <option value="表面平静">表面平静</option>
+              <option value="已经裂开">已经裂开</option>
+              <option value="想直接毕业">想直接毕业</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-primary" onclick="generateFortune()">生成研究生命盘</button>
+          <button class="btn-secondary" onclick="fillRandomProfile()">随机填充</button>
+          <button class="btn-secondary" onclick="resetForm()">清空表单</button>
+        </div>
+
+        <div class="hint">
+          系统说明：本网页采用先进的“玄学 + 研究生共同经验 + 一点点黑色幽默”算法生成结果。<br>
+          不替代实验设计，不替代论文写作，也不替代你导师突然一句“你来我办公室一下”。
+        </div>
+      </aside>
+
+      <main class="panel">
+        <div class="section-title">
+          <h2>今日命盘结果</h2>
+          <small>建议在导师不在线时查看，心理体验更佳</small>
+        </div>
+
+        <div id="resultWrap" class="result-wrap">
+          <div class="empty-state">
+            <div>
+              <div style="font-size: 52px; margin-bottom: 12px;">🧪📄💬🎓</div>
+              点击“生成研究生命盘”，看看今天是实验先出结果，还是导师先来找你。<br>
+              你不是一个人在科研，至少这个网页很懂你。
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 
   <script>
-    const fortuneTexts = {
-      general: [
-        "今天整体气场平稳，适合处理积压事务，越主动越容易迎来好消息。",
-        "你今天的状态偏上扬，适合开启新计划，但不要同时铺开太多任务。",
-        "外界干扰较多，保持节奏比追求速度更重要，稳住就能赢。",
-        "今天适合整理思路、复盘目标，一些之前模糊的问题会逐渐明朗。"
+    const dataPool = {
+      summaryTitles: [
+        "中上签，适合装作很忙并真的做出一点东西",
+        "平稳签，今天不一定飞升，但不至于彻底裂开",
+        "转机签，上午怀疑人生，下午略见天光",
+        "守成签，宜先活下来，再谈顶刊和人生理想",
+        "缓升签，结果不会立刻从天而降，但你离它没那么远了"
       ],
-      love: [
-        "感情运势偏柔和，适合坦诚交流，少猜测、多表达会更顺利。",
-        "今天容易在关系里获得回应，但前提是你先释放善意。",
-        "旧情绪可能被触发，先照顾自己的感受，再处理关系问题。",
-        "有伴者适合增进默契，单身者则容易在自然社交中遇到有趣的人。"
+      keywords: ["稳住", "先跑通一个结果", "少内耗", "先改图", "先备份", "别秒回导师", "先把摘要写出来"],
+      experimentGood: [
+        "你今天的实验运势呈现‘前半段怀疑自己，后半段怀疑是线没插好’的经典走势。好消息是，真正的问题往往没有你想得那么高深。",
+        "实验盘显示今天有机会摸到一点有效信号，虽然它可能先以‘看起来像噪声’的形式出现。",
+        "今日适合做对照、补重复、重新检查参数。很多所谓的科研顿悟，本质上只是把基础操作做对了。"
       ],
-      career: [
-        "学业和事业运偏强，适合推进难题，尤其适合做需要专注的工作。",
-        "你今天的执行力不错，先完成最关键的 20%，会明显提升效率。",
-        "适合请教老师、同事或前辈，外部反馈会帮你少走弯路。",
-        "今天不是拼时长的一天，而是拼方法的一天，选对路径更重要。"
+      experimentBad: [
+        "实验天象略显紊乱，容易出现‘跑了半天发现单位写错了’或‘结果很努力地不显著’的情况。",
+        "今天的仪器气场不太稳定，建议先检查电源、接口、路径、命名和你自己的睡眠。",
+        "如果你今天感觉实验在针对你，不一定是错觉，但也不一定是你菜，可能只是系统在正常发挥。"
       ],
-      wealth: [
-        "财运中等偏稳，适合做预算、控支出，不宜冲动消费。",
-        "今天容易出现小额好运，但真正关键的仍是理性判断。",
-        "适合重新审视消费习惯，删掉无效支出就是在给自己加收入。",
-        "财务上宜守不宜攻，先把已有资源整理清楚再谈下一步。"
-      ]
-    };
-
-    const luckyItems = {
-      color: ["月白", "竹青", "绯红", "曜黑", "琥珀金", "雾霾蓝", "松石绿"],
-      number: [3, 6, 7, 8, 9, 13, 16, 21, 24, 28],
-      direction: ["正东", "东南", "正南", "西南", "正西", "西北", "正北"],
-      advice: [
-        "适合先完成一件最重要的小事，再进入深度工作。",
-        "遇到犹豫时，先写下来，你会更容易看清真正问题。",
-        "今天不妨减少无效社交，把时间留给自己。",
-        "先动起来比反复等待“完美时机”更有帮助。",
-        "保持边界感，会让你今天更轻松。"
-      ]
+      paperGood: [
+        "论文运势稳中向好，适合补图、润色、改摘要、补 related work。今天不是灵感爆发型，而是细节推进型。",
+        "你离‘顺利投稿’还差几步，但这几步并不是玄学，是把拖了很久的那几块内容认真填上。",
+        "今天适合处理参考文献、图注、方法部分和审稿人最爱盯的小细节。别小看这些，它们经常比豪言壮语更接近接收。"
+      ],
+      paperBad: [
+        "论文盘显示你今天容易陷入‘我马上就能投了’的幻觉，随后被格式、图例和实验补充打回现实。",
+        "今天不太适合幻想一夜写完全文，但很适合把拖了两周的一个小段落写完。科研进度的本质，是持续给未来的自己减债。",
+        "近期论文运虽然不算低迷，但会被‘只是改一句话却牵一发动全身’型事件反复干扰。"
+      ],
+      advisorMessages: [
+        "最近进展怎么样？",
+        "那个图你再整理一下。",
+        "你有空来办公室一趟。",
+        "这个结果你怎么看？",
+        "发我一下你最新版本。",
+        "你这个地方逻辑还得再顺一顺。"
+      ],
+      graduationGood: [
+        "毕业星象整体尚稳，只要不彻底摆烂，毕业并不会无缘无故背刺你。你真正的敌人更多是材料、流程、表格和时间管理。",
+        "命盘显示你并不是毕不了业，你只是还没到那个节点。最近更重要的是把该补的都补齐，而不是提前宣判自己。",
+        "今日天机提示：顺利毕业靠的不是突然觉醒，而是一次次把小事做完。听起来不酷，但很有效。"
+      ],
+      graduationBad: [
+        "毕业运势略有波动，主要风险不在学术本身，而在你可能低估了流程副本的复杂程度。",
+        "你和顺利毕业之间隔着的，不一定是大问题，有时候只是‘忘了交某个材料’这种极其离谱的小问题。",
+        "毕业天象提醒：不要把未来的你想象得过于万能。现在能做完的表格、申请和初稿，尽量别留给之后。"
+      ],
+      disasters: [
+        "跑了 6 小时的数据没保存，最后只留下一个空文件夹和一声叹息。",
+        "导师突然问起你以为他已经忘了的那个任务，而且问得很自然。",
+        "仪器今天情绪不稳定，你以为是系统问题，最后发现是你自己路径配错。",
+        "审稿意见第 2 条比你的正文某一节还长，而且看起来非常自信。",
+        "你以为只是改个小问题，结果牵一发动全身，整篇文章都开始抖。",
+        "准备开工时发现自己花了 40 分钟整理桌面、喝水、找文献、发呆，但还没真正开始。"
+      ],
+      amulets: [
+        "护体符：做实验前先检查电源、路径、样品编号和你昨晚有没有睡好。",
+        "护体符：任何结果先截图，再谈科学解释。没有截图的科研记忆，不受命运保护。",
+        "护体符：导师发消息前先深呼吸，不要秒回‘好的老师’，然后才开始想自己答应了什么。",
+        "护体符：先完成最小的一步，破除拖延封印。很多焦虑不是因为任务太难，而是因为你还没开始。",
+        "护体符：把原始数据和处理结果分开存，少走很多本可避免的心路历程。"
+      ],
+      shareTexts: [
+        "我测了下，今天被导师问进度概率高得有点离谱。",
+        "我的研究生命格是‘返修渡劫型’，听起来居然挺准确。",
+        "赛博算命说我论文运一般，但毕业运还活着。",
+        "今日科研签：实验未成，道心先稳。",
+        "这个网页说我不是做不出来，只是还没做出来。"
+      ],
+      finalQuotes: [
+        "你不是做不出来，你只是还没做出来。",
+        "很多结果不会今天出，但很多努力也不会白做。",
+        "别怕，科研的大部分时候都不像胜利，更像持续没放弃。",
+        "今天先推进一点点，明天的你会感谢现在这个没彻底躺平的自己。",
+        "本系统检测到你仍具备毕业潜质，请保持最低限度的清醒与努力。"
+      ],
+      yiList: ["整理数据", "补图", "改图题", "写方法部分", "回导师消息", "做对照组", "备份文件", "假装从容"],
+      jiList: ["不备份就改原文件", "幻想今晚写完整篇论文", "看见群消息装没看见", "白天摆烂晚上硬补", "相信第一次实验就是真理", "在最困的时候做最重要的分析"]
     };
 
     function hashString(str) {
@@ -239,78 +697,374 @@
       return Math.abs(hash);
     }
 
-    function pickBySeed(arr, seed, offset = 0) {
+    function pick(arr, seed, offset = 0) {
       return arr[(seed + offset) % arr.length];
     }
 
-    function generateFortune() {
-      const name = document.getElementById('name').value.trim() || '有缘人';
-      const birthday = document.getElementById('birthday').value || '2000-01-01';
-      const category = document.getElementById('category').value;
-
-      const seed = hashString(name + birthday + category + new Date().toDateString());
-      const score = 60 + (seed % 41);
-      const mainText = pickBySeed(fortuneTexts[category], seed);
-      const luckyColor = pickBySeed(luckyItems.color, seed, 1);
-      const luckyNumber = pickBySeed(luckyItems.number, seed, 2);
-      const luckyDirection = pickBySeed(luckyItems.direction, seed, 3);
-      const advice = pickBySeed(luckyItems.advice, seed, 4);
-
-      let level = '平稳之象';
-      if (score >= 90) level = '上上签';
-      else if (score >= 80) level = '吉运当头';
-      else if (score >= 70) level = '稳中向好';
-      else level = '宜静不宜躁';
-
-      const categoryNameMap = {
-        general: '综合运势',
-        love: '感情运势',
-        career: '学业 / 事业',
-        wealth: '财运'
-      };
-
-      document.getElementById('resultBox').innerHTML = `
-        <div class="badge">${categoryNameMap[category]} · ${level}</div>
-        <div><strong>${name}</strong> 的今日运势评分</div>
-        <div class="score">${score} / 100</div>
-        <div class="tips">${mainText}</div>
-
-        <div class="section-title">今日提示</div>
-        <div class="tips">
-          幸运颜色：${luckyColor}<br>
-          幸运数字：${luckyNumber}<br>
-          有利方位：${luckyDirection}<br>
-          行动建议：${advice}
-        </div>
-
-        <div class="section-title">一句话解读</div>
-        <div class="tips">今天最适合你的关键词是：<b>${score >= 80 ? '主动推进' : score >= 70 ? '稳步积累' : '调整节奏'}</b>。</div>
-      `;
+    function pickMany(arr, seed, count, offset = 0) {
+      const result = [];
+      const used = new Set();
+      let i = 0;
+      while (result.length < count && i < arr.length * 3) {
+        const index = (seed + offset + i * 3) % arr.length;
+        if (!used.has(index)) {
+          used.add(index);
+          result.push(arr[index]);
+        }
+        i++;
+      }
+      return result;
     }
 
-    function randomFill() {
-      const samples = ["林知夏", "周明宇", "沈清河", "陈星野", "苏晚宁"];
-      const randomName = samples[Math.floor(Math.random() * samples.length)];
-      const randomDate = `199${Math.floor(Math.random() * 9)}-0${Math.floor(Math.random() * 8) + 1}-1${Math.floor(Math.random() * 9)}`;
-      const categories = ['general', 'love', 'career', 'wealth'];
-      const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    function clamp(num, min, max) {
+      return Math.max(min, Math.min(max, num));
+    }
 
-      document.getElementById('name').value = randomName;
-      document.getElementById('birthday').value = randomDate;
-      document.getElementById('category').value = randomCategory;
+    function getFormData() {
+      return {
+        name: document.getElementById('name').value.trim() || '某位正在渡劫的研究生',
+        grade: document.getElementById('grade').value,
+        discipline: document.getElementById('discipline').value,
+        status: document.getElementById('status').value,
+        concern: document.getElementById('concern').value,
+        messageCheck: document.getElementById('messageCheck').value,
+        experimentState: document.getElementById('experimentState').value,
+        paperState: document.getElementById('paperState').value,
+        mentalState: document.getElementById('mentalState').value
+      };
+    }
+
+    function calculateScores(data, seed) {
+      let base = 68 + (seed % 21);
+
+      if (data.experimentState === '大成功') base += 8;
+      if (data.experimentState === '有点意思') base += 4;
+      if (data.experimentState === '全是噪声') base -= 6;
+      if (data.experimentState === '仪器又坏了') base -= 9;
+
+      if (data.paperState === '在写') base += 3;
+      if (data.paperState === '在改') base += 2;
+      if (data.paperState === '第N次返修') base -= 2;
+      if (data.paperState === '没开始') base -= 4;
+
+      if (data.mentalState === '稳如老狗') base += 6;
+      if (data.mentalState === '表面平静') base += 1;
+      if (data.mentalState === '已经裂开') base -= 5;
+      if (data.mentalState === '想直接毕业') base -= 3;
+
+      const total = clamp(base, 52, 96);
+      const experiment = clamp(total + ((seed % 9) - 4), 45, 97);
+      const paper = clamp(total + (((seed >> 2) % 11) - 5), 42, 96);
+      const graduation = clamp(total + (((seed >> 3) % 9) - 3), 48, 98);
+
+      let advisor = 30 + (seed % 55);
+      if (data.messageCheck === '不敢看') advisor += 12;
+      if (data.status === '在被导师催') advisor += 18;
+      if (data.concern === '导师今天会不会找我') advisor += 12;
+      advisor = clamp(advisor, 8, 96);
+
+      const meeting = clamp(advisor - 15 + ((seed >> 1) % 25), 5, 92);
+      const office = clamp(advisor - 28 + ((seed >> 4) % 26), 3, 78);
+      const safeOffWork = clamp(88 - advisor + ((seed >> 5) % 18), 4, 89);
+
+      return { total, experiment, paper, advisor, graduation, meeting, office, safeOffWork };
+    }
+
+    function scoreLabel(score) {
+      if (score >= 88) return '上上签';
+      if (score >= 78) return '吉运当头';
+      if (score >= 68) return '稳中向好';
+      return '宜静不宜躁';
+    }
+
+    function todayAdvisorTime(seed) {
+      const slots = [
+        '09:12—10:08',
+        '10:40—11:20',
+        '13:50—14:35',
+        '14:30—16:10',
+        '16:45—17:22',
+        '20:14—21:03'
+      ];
+      return pick(slots, seed, 6);
+    }
+
+    function generateOverview(data, scores, seed) {
+      const title = pick(dataPool.summaryTitles, seed, 1);
+      const keyword = pick(dataPool.keywords, seed, 2);
+      const progressStage = [
+        '正在从“完全没头绪”缓慢进化到“勉强能讲清楚”',
+        '距离阶段性进展只差几次认真推进和一丢丢运气',
+        '本周适合先做出一个可汇报版本，再考虑大跨步飞升',
+        '当前更适合稳步积累，不适合进行脱离现实的乐观预判'
+      ];
+
+      return {
+        title,
+        keyword,
+        stage: pick(progressStage, seed, 3),
+        sign: scoreLabel(scores.total)
+      };
+    }
+
+    function generateModules(data, scores, seed) {
+      const experimentText = scores.experiment >= 72 ? pick(dataPool.experimentGood, seed, 1) : pick(dataPool.experimentBad, seed, 2);
+      const paperText = scores.paper >= 72 ? pick(dataPool.paperGood, seed, 3) : pick(dataPool.paperBad, seed, 4);
+      const graduationText = scores.graduation >= 72 ? pick(dataPool.graduationGood, seed, 5) : pick(dataPool.graduationBad, seed, 6);
+      const advisorMsg = pick(dataPool.advisorMessages, seed, 7);
+
+      let concernReply = '';
+      if (data.concern === '实验什么时候出结果') {
+        concernReply = '卦象显示，真正的转机更可能来自你下一次更稳的复现，而不是这一次盯着屏幕祈祷。';
+      } else if (data.concern === '什么时候能发论文') {
+        concernReply = '天机显示：离投稿还差“一次完整复现”和“三个你以为不重要但其实很重要的细节”。';
+      } else if (data.concern === '导师今天会不会找我') {
+        concernReply = '从赛博命盘看，今天最好提前准备一张“看起来已经做了不少”的图，以备不时之需。';
+      } else if (data.concern === '这周能不能推进进度') {
+        concernReply = '这周最适合的推进方式不是暴冲，而是每天扎实解决一个小问题。';
+      } else if (data.concern === '能不能顺利毕业') {
+        concernReply = '你不是不能毕业，你只是还在主线和支线任务交织的阶段。';
+      } else {
+        concernReply = '睡个好觉本身就是科研护体法器之一，但命盘建议你先别在床上打开导师对话框。';
+      }
+
+      return {
+        experimentText,
+        paperText,
+        graduationText,
+        advisorMsg,
+        concernReply,
+        disaster: pick(dataPool.disasters, seed, 8),
+        amulet: pick(dataPool.amulets, seed, 9),
+        shareText: pick(dataPool.shareTexts, seed, 10),
+        finalQuote: pick(dataPool.finalQuotes, seed, 11),
+        yiList: pickMany(dataPool.yiList, seed, 4, 12),
+        jiList: pickMany(dataPool.jiList, seed, 4, 13)
+      };
+    }
+
+    function renderResult(data, scores, overview, modules, seed) {
+      const resultWrap = document.getElementById('resultWrap');
+      const issueProbabilityText = scores.advisor >= 70 ? '高危预警' : scores.advisor >= 50 ? '有一定风险' : '暂时平稳';
+
+      resultWrap.innerHTML = `
+        <section class="overview">
+          <div class="overview-card">
+            <div class="tag">${data.grade} · ${data.discipline} · ${overview.sign}</div>
+            <div style="font-size: 15px; color: var(--muted);">${data.name} 的今日科研气运</div>
+            <div class="score">${scores.total}<span style="font-size: 18px; color: #f4ddad;"> / 100</span></div>
+            <p><strong>命格评语：</strong>${overview.title}</p>
+            <p><strong>今日关键词：</strong>${overview.keyword}</p>
+            <p><strong>进度解读：</strong>${overview.stage}</p>
+            <p><strong>核心困扰回应：</strong>${modules.concernReply}</p>
+          </div>
+
+          <div class="overview-card">
+            <div class="mini-stats">
+              <div class="mini-stat">
+                <div>导师联系风险</div>
+                <strong>${scores.advisor}%</strong>
+                <div style="color: var(--muted); margin-top: 4px;">${issueProbabilityText} · 高危时段 ${todayAdvisorTime(seed)}</div>
+              </div>
+              <div class="mini-stat">
+                <div>实验结果浮现指数</div>
+                <strong>${scores.experiment}%</strong>
+                <div style="color: var(--muted); margin-top: 4px;">建议先查线、查参数、查自己有没有保存</div>
+              </div>
+              <div class="mini-stat">
+                <div>毕业主线稳定度</div>
+                <strong>${scores.graduation}%</strong>
+                <div style="color: var(--muted); margin-top: 4px;">大概率不是毕不了业，只是过程比较像副本</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="modules-grid">
+          <article class="module">
+            <h3>🧪 实验运</h3>
+            <p>${modules.experimentText}</p>
+            <ul>
+              <li>实验运评分：<strong>${scores.experiment}</strong></li>
+              <li>当前状态：${data.status}</li>
+              <li>最近一次实验结果：${data.experimentState}</li>
+              <li>今日宜：重复对照组；今日忌：盲信第一次结果</li>
+            </ul>
+          </article>
+
+          <article class="module">
+            <h3>📄 论文运</h3>
+            <p>${modules.paperText}</p>
+            <ul>
+              <li>论文运评分：<strong>${scores.paper}</strong></li>
+              <li>当前论文状态：${data.paperState}</li>
+              <li>今天更适合：补图、改摘要、顺逻辑、补引用</li>
+              <li>今天不太适合：幻想今晚直接投出去</li>
+            </ul>
+          </article>
+
+          <article class="module">
+            <h3>💬 导师运</h3>
+            <p>今日导师联系概率：<strong>${scores.advisor}%</strong>。高危时段集中在 <strong>${todayAdvisorTime(seed)}</strong>。建议提前准备好一张看起来很努力的图，以及一段能解释你最近到底做了什么的话。</p>
+            <ul>
+              <li>导师可能发送的话：<strong>“${modules.advisorMsg}”</strong></li>
+              <li>你今天看导师消息了吗：${data.messageCheck}</li>
+              <li>建议：先深呼吸，再点开对话框</li>
+              <li>隐藏技巧：不要只回复“好的老师”，先确认自己到底答应了什么</li>
+            </ul>
+          </article>
+
+          <article class="module">
+            <h3>🎓 毕业运</h3>
+            <p>${modules.graduationText}</p>
+            <ul>
+              <li>毕业运评分：<strong>${scores.graduation}</strong></li>
+              <li>当前精神状态：${data.mentalState}</li>
+              <li>真正的风险：材料、时间、流程、拖延</li>
+              <li>真正的机会：持续推进，而不是一次顿悟</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="fun-grid">
+          <article class="module">
+            <h3>⚡ 今日科研劫数</h3>
+            <p>${modules.disaster}</p>
+            <p><strong>护体符：</strong>${modules.amulet}</p>
+          </article>
+
+          <article class="module">
+            <h3>📡 导师消息预警雷达</h3>
+            <div class="bar-group">
+              <div>
+                <div class="bar-label"><span>被问进度概率</span><span>${scores.advisor}%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:${scores.advisor}%"></div></div>
+              </div>
+              <div>
+                <div class="bar-label"><span>被拉去开会概率</span><span>${scores.meeting}%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:${scores.meeting}%"></div></div>
+              </div>
+              <div>
+                <div class="bar-label"><span>收到“你来一下”概率</span><span>${scores.office}%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:${scores.office}%"></div></div>
+              </div>
+              <div>
+                <div class="bar-label"><span>今日平安下班概率</span><span>${scores.safeOffWork}%</span></div>
+                <div class="bar-track"><div class="bar-fill" style="width:${scores.safeOffWork}%"></div></div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="module">
+          <h3>☯ 今日宜忌</h3>
+          <div class="yi-ji">
+            <div class="yi-ji-box yi">
+              <h4>宜</h4>
+              <ul>
+                ${modules.yiList.map(item => `<li>${item}</li>`).join('')}
+              </ul>
+            </div>
+            <div class="yi-ji-box ji">
+              <h4>忌</h4>
+              <ul>
+                ${modules.jiList.map(item => `<li>${item}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="final-quote">
+          <strong>今日签语：</strong>${modules.finalQuote}
+        </section>
+
+        <section class="share-box">
+          <div class="share-text">
+            <strong>分享文案：</strong>${modules.shareText}<br>
+            你可以把这段结果截图发给同门，证明自己不是一个人在渡劫。
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-primary" onclick="copyShareText()">复制分享文案</button>
+            <button class="btn-secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">回到顶部</button>
+          </div>
+        </section>
+
+        <div class="footer-note">
+          免责声明：本系统仅供娱乐，不替代真实科研努力、实验设计、论文写作与毕业流程管理。<br>
+          若结果不理想，请优先考虑补实验、备份数据、整理思路，而不是和命运硬碰硬。
+        </div>
+      `;
+
+      window.latestShareText = modules.shareText;
+    }
+
+    function generateFortune() {
+      const data = getFormData();
+      const seed = hashString(JSON.stringify(data) + new Date().toDateString());
+      const scores = calculateScores(data, seed);
+      const overview = generateOverview(data, scores, seed);
+      const modules = generateModules(data, scores, seed);
+      renderResult(data, scores, overview, modules, seed);
+    }
+
+    function fillRandomProfile() {
+      const names = ['王同学', '李师兄', '张师姐', '某位还在改图的人', '今天也想顺利毕业的我', '一个假装不慌的研二'];
+      const grades = ['研一', '研二', '研三', '延毕观察组'];
+      const disciplines = ['理工科', '文社科', '医学', '艺术学', '导师也说不清'];
+      const statuses = ['在做实验', '在写论文', '在改论文', '在等审稿', '在被导师催', '在假装不焦虑'];
+      const concerns = ['实验什么时候出结果', '什么时候能发论文', '导师今天会不会找我', '这周能不能推进进度', '能不能顺利毕业', '我到底能不能睡个好觉'];
+      const msgChecks = ['看了', '没看', '不敢看'];
+      const expStates = ['大成功', '有点意思', '全是噪声', '仪器又坏了'];
+      const paperStates = ['没开始', '在写', '在改', '第N次返修'];
+      const mentalStates = ['稳如老狗', '表面平静', '已经裂开', '想直接毕业'];
+
+      document.getElementById('name').value = names[Math.floor(Math.random() * names.length)];
+      document.getElementById('grade').value = grades[Math.floor(Math.random() * grades.length)];
+      document.getElementById('discipline').value = disciplines[Math.floor(Math.random() * disciplines.length)];
+      document.getElementById('status').value = statuses[Math.floor(Math.random() * statuses.length)];
+      document.getElementById('concern').value = concerns[Math.floor(Math.random() * concerns.length)];
+      document.getElementById('messageCheck').value = msgChecks[Math.floor(Math.random() * msgChecks.length)];
+      document.getElementById('experimentState').value = expStates[Math.floor(Math.random() * expStates.length)];
+      document.getElementById('paperState').value = paperStates[Math.floor(Math.random() * paperStates.length)];
+      document.getElementById('mentalState').value = mentalStates[Math.floor(Math.random() * mentalStates.length)];
+
       generateFortune();
     }
 
     function resetForm() {
       document.getElementById('name').value = '';
-      document.getElementById('birthday').value = '';
-      document.getElementById('category').value = 'general';
-      document.getElementById('resultBox').innerHTML = `
-        <div class="empty">
-          结果会显示在这里。<br>
-          这个网页目前是前端纯静态版本，不需要服务器，保存为 <b>.html</b> 文件后双击即可打开。
+      document.getElementById('grade').value = '研一';
+      document.getElementById('discipline').value = '理工科';
+      document.getElementById('status').value = '在做实验';
+      document.getElementById('concern').value = '实验什么时候出结果';
+      document.getElementById('messageCheck').value = '看了';
+      document.getElementById('experimentState').value = '大成功';
+      document.getElementById('paperState').value = '没开始';
+      document.getElementById('mentalState').value = '稳如老狗';
+
+      document.getElementById('resultWrap').innerHTML = `
+        <div class="empty-state">
+          <div>
+            <div style="font-size: 52px; margin-bottom: 12px;">🧪📄💬🎓</div>
+            点击“生成研究生命盘”，看看今天是实验先出结果，还是导师先来找你。<br>
+            你不是一个人在科研，至少这个网页很懂你。
+          </div>
         </div>
       `;
+    }
+
+    function scrollToForm() {
+      document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function copyShareText() {
+      const text = window.latestShareText || '我刚测了研究生赛博命盘，结果准得让我有点害怕。';
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('分享文案已复制，可以发给同门一起笑一笑。');
+      } catch (err) {
+        alert('复制失败了，你可以手动复制这句：\n' + text);
+      }
     }
   </script>
 </body>
