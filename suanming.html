@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今日运势小站</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: linear-gradient(135deg, #0f1021, #1f1b3a 45%, #3a245c);
+      color: #f6f0ff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .container {
+      width: 100%;
+      max-width: 920px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(14px);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    .sub {
+      margin: 0 0 28px;
+      text-align: center;
+      color: #ddd1ff;
+      line-height: 1.7;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #e6dbff;
+    }
+    input, select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.08);
+      color: white;
+      outline: none;
+      font-size: 15px;
+    }
+    option { color: #111; }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 24px 0;
+    }
+    button {
+      border: none;
+      padding: 13px 22px;
+      border-radius: 999px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+    .primary {
+      background: linear-gradient(135deg, #ffcf70, #ff9d5c);
+      color: #2d1d00;
+      font-weight: 700;
+    }
+    .secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+    .result {
+      margin-top: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+      border-radius: 20px;
+      padding: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      min-height: 240px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 207, 112, 0.18);
+      color: #ffd98f;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .score {
+      font-size: 42px;
+      font-weight: 800;
+      margin: 6px 0 14px;
+      color: #ffe6a8;
+    }
+    .section-title {
+      font-size: 18px;
+      margin: 18px 0 8px;
+      color: #fff0c3;
+    }
+    .tips {
+      line-height: 1.8;
+      color: #f1e8ff;
+    }
+    .disclaimer {
+      margin-top: 18px;
+      color: #cfc3e7;
+      font-size: 13px;
+      line-height: 1.7;
+      text-align: center;
+    }
+    .empty {
+      color: #cfc3e7;
+      line-height: 1.8;
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 28px; }
+      .container { padding: 18px; }
+      .score { font-size: 34px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>今日运势小站</h1>
+    <p class="sub">输入你的名字和出生信息，生成一个娱乐向的今日运势页面。<br>适合拿来做练手网页、课程作业、个人小项目。</p>
+
+    <div class="grid">
+      <div class="card">
+        <label for="name">姓名</label>
+        <input id="name" type="text" placeholder="例如：张三" />
+      </div>
+      <div class="card">
+        <label for="birthday">出生日期</label>
+        <input id="birthday" type="date" />
+      </div>
+      <div class="card">
+        <label for="category">占卜类型</label>
+        <select id="category">
+          <option value="general">综合运势</option>
+          <option value="love">感情运势</option>
+          <option value="career">学业 / 事业</option>
+          <option value="wealth">财运</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" onclick="generateFortune()">开始算一卦</button>
+      <button class="secondary" onclick="randomFill()">随机示例</button>
+      <button class="secondary" onclick="resetForm()">清空内容</button>
+    </div>
+
+    <div class="result" id="resultBox">
+      <div class="empty">
+        结果会显示在这里。<br>
+        这个网页目前是前端纯静态版本，不需要服务器，保存为 <b>.html</b> 文件后双击即可打开。
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      说明：本页面仅供娱乐与网页练习使用，不构成现实决策建议。
+    </div>
+  </div>
+
+  <script>
+    const fortuneTexts = {
+      general: [
+        "今天整体气场平稳，适合处理积压事务，越主动越容易迎来好消息。",
+        "你今天的状态偏上扬，适合开启新计划，但不要同时铺开太多任务。",
+        "外界干扰较多，保持节奏比追求速度更重要，稳住就能赢。",
+        "今天适合整理思路、复盘目标，一些之前模糊的问题会逐渐明朗。"
+      ],
+      love: [
+        "感情运势偏柔和，适合坦诚交流，少猜测、多表达会更顺利。",
+        "今天容易在关系里获得回应，但前提是你先释放善意。",
+        "旧情绪可能被触发，先照顾自己的感受，再处理关系问题。",
+        "有伴者适合增进默契，单身者则容易在自然社交中遇到有趣的人。"
+      ],
+      career: [
+        "学业和事业运偏强，适合推进难题，尤其适合做需要专注的工作。",
+        "你今天的执行力不错，先完成最关键的 20%，会明显提升效率。",
+        "适合请教老师、同事或前辈，外部反馈会帮你少走弯路。",
+        "今天不是拼时长的一天，而是拼方法的一天，选对路径更重要。"
+      ],
+      wealth: [
+        "财运中等偏稳，适合做预算、控支出，不宜冲动消费。",
+        "今天容易出现小额好运，但真正关键的仍是理性判断。",
+        "适合重新审视消费习惯，删掉无效支出就是在给自己加收入。",
+        "财务上宜守不宜攻，先把已有资源整理清楚再谈下一步。"
+      ]
+    };
+
+    const luckyItems = {
+      color: ["月白", "竹青", "绯红", "曜黑", "琥珀金", "雾霾蓝", "松石绿"],
+      number: [3, 6, 7, 8, 9, 13, 16, 21, 24, 28],
+      direction: ["正东", "东南", "正南", "西南", "正西", "西北", "正北"],
+      advice: [
+        "适合先完成一件最重要的小事，再进入深度工作。",
+        "遇到犹豫时，先写下来，你会更容易看清真正问题。",
+        "今天不妨减少无效社交，把时间留给自己。",
+        "先动起来比反复等待“完美时机”更有帮助。",
+        "保持边界感，会让你今天更轻松。"
+      ]
+    };
+
+    function hashString(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
+
+    function pickBySeed(arr, seed, offset = 0) {
+      return arr[(seed + offset) % arr.length];
+    }
+
+    function generateFortune() {
+      const name = document.getElementById('name').value.trim() || '有缘人';
+      const birthday = document.getElementById('birthday').value || '2000-01-01';
+      const category = document.getElementById('category').value;
+
+      const seed = hashString(name + birthday + category + new Date().toDateString());
+      const score = 60 + (seed % 41);
+      const mainText = pickBySeed(fortuneTexts[category], seed);
+      const luckyColor = pickBySeed(luckyItems.color, seed, 1);
+      const luckyNumber = pickBySeed(luckyItems.number, seed, 2);
+      const luckyDirection = pickBySeed(luckyItems.direction, seed, 3);
+      const advice = pickBySeed(luckyItems.advice, seed, 4);
+
+      let level = '平稳之象';
+      if (score >= 90) level = '上上签';
+      else if (score >= 80) level = '吉运当头';
+      else if (score >= 70) level = '稳中向好';
+      else level = '宜静不宜躁';
+
+      const categoryNameMap = {
+        general: '综合运势',
+        love: '感情运势',
+        career: '学业 / 事业',
+        wealth: '财运'
+      };
+
+      document.getElementById('resultBox').innerHTML = `
+        <div class="badge">${categoryNameMap[category]} · ${level}</div>
+        <div><strong>${name}</strong> 的今日运势评分</div>
+        <div class="score">${score} / 100</div>
+        <div class="tips">${mainText}</div>
+
+        <div class="section-title">今日提示</div>
+        <div class="tips">
+          幸运颜色：${luckyColor}<br>
+          幸运数字：${luckyNumber}<br>
+          有利方位：${luckyDirection}<br>
+          行动建议：${advice}
+        </div>
+
+        <div class="section-title">一句话解读</div>
+        <div class="tips">今天最适合你的关键词是：<b>${score >= 80 ? '主动推进' : score >= 70 ? '稳步积累' : '调整节奏'}</b>。</div>
+      `;
+    }
+
+    function randomFill() {
+      const samples = ["林知夏", "周明宇", "沈清河", "陈星野", "苏晚宁"];
+      const randomName = samples[Math.floor(Math.random() * samples.length)];
+      const randomDate = `199${Math.floor(Math.random() * 9)}-0${Math.floor(Math.random() * 8) + 1}-1${Math.floor(Math.random() * 9)}`;
+      const categories = ['general', 'love', 'career', 'wealth'];
+      const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+
+      document.getElementById('name').value = randomName;
+      document.getElementById('birthday').value = randomDate;
+      document.getElementById('category').value = randomCategory;
+      generateFortune();
+    }
+
+    function resetForm() {
+      document.getElementById('name').value = '';
+      document.getElementById('birthday').value = '';
+      document.getElementById('category').value = 'general';
+      document.getElementById('resultBox').innerHTML = `
+        <div class="empty">
+          结果会显示在这里。<br>
+          这个网页目前是前端纯静态版本，不需要服务器，保存为 <b>.html</b> 文件后双击即可打开。
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
